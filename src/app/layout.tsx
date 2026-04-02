@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "next-themes";
+import Navbar from "./navbar";
 
 import "./globals.css";
 
@@ -47,9 +49,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} scroll-smooth`}
       suppressHydrationWarning={true}
     >
-      <body className="flex flex-col antialiased">
-        {children}
-        <Toaster />
+      <body className="flex flex-col antialiased m-0 min-h-screen">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Navbar />
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
