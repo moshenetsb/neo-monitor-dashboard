@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/theme-toogle";
+import { useSearchParams } from "next/navigation";
 
 import {
   Collapsible,
@@ -22,9 +23,11 @@ const navigation = [
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const isCurrent = (href: string) => {
-    return pathname === href || pathname.startsWith(href);
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
   };
 
   return (
@@ -39,7 +42,7 @@ export default function Navbar() {
           {navigation.map((item) => (
             <Link
               key={item.name}
-              href={item.href}
+              href={`${item.href}?${searchParams.toString()}`}
               className={
                 isCurrent(item.href)
                   ? "text-primary font-semibold"
@@ -68,7 +71,7 @@ export default function Navbar() {
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
-                    href={item.href}
+                    href={`${item.href}?${searchParams.toString()}`}
                     onClick={() => setIsMenuOpen(false)}
                     className={
                       isCurrent(item.href)
