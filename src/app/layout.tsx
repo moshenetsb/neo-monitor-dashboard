@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "NEO Monitoring Dashboard",
   description:
-    "Interactive dashboard monitoring Near-Earth Objects (asteroids) using NASA's API. Track distances, velocities, and potential hazards in real-time.",
+    "Interactive dashboard monitoring Near-Earth Objects (asteroids) using NASA's NeoWs API. Track distances, velocities, and potential hazards in real-time.",
   icons: [
     {
       rel: "icon",
@@ -45,7 +47,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} scroll-smooth`}
       suppressHydrationWarning={true}
     >
-      <body className="flex flex-col antialiased">{children}</body>
+      <body className="flex flex-col antialiased">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
