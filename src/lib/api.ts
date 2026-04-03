@@ -1,3 +1,5 @@
+import type { Asteroid } from "@/types/asteroid";
+
 export const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 export const API_KEY = process.env.NASA_API_KEY ?? "";
 
@@ -9,4 +11,59 @@ if (API_URL === "") {
 
 if (API_KEY === "") {
   throw new Error("API_KEY was not set in enviroment variables!");
+}
+
+export async function fetchAsteroidsRange(
+  startDate: string,
+  endDate: string,
+): Promise<Asteroid[]> {
+  "use server";
+  const maxDays = 7;
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const currentStart = new Date(start);
+  const allAsteroids: Asteroid[] = [];
+
+  while (currentStart <= end) {
+    const currentEnd = new Date(
+      Math.min(
+        currentStart.getTime() + maxDays * 24 * 60 * 60 * 1000 - 1,
+        end.getTime(),
+      ),
+    );
+    const startStr = currentStart.toISOString().split("T")[0];
+    const endStr = currentEnd.toISOString().split("T")[0];
+
+    const response = await fetch(
+      `${API_URL}/feed?start_date=${startStr}&end_date=${endStr}&api_key=${API_KEY}`,
+      {
+        next: { revalidate: 900 },
+      },
+    );
+
+    if (!response.ok) {
+      let message = "Unknown error";
+
+      if (response.status === 403) {
+        message = "API key invalid or your IP is blocked.";
+      } else if (response.status === 429) {
+        message = "Too many requests from your API key. Please try later.";
+      }
+
+      throw new Error(message);
+    }
+
+    const data = await response.json();
+
+    const flattened = Object.entries(data.near_earth_objects).flatMap(
+      ([date, asteroids]) =>
+        (asteroids as Asteroid[]).map((a) => ({ ...a, approach_date: date })),
+    ) as Asteroid[];
+
+    allAsteroids.push(...flattened);
+
+    currentStart.setDate(currentStart.getDate() + maxDays);
+  }
+
+  return allAsteroids;
 }

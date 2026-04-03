@@ -16,8 +16,9 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  { name: "Dashboard", href: "/" },
-  { name: "Asteroids", href: "/asteroids" },
+  { name: "Home", href: "/" },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Charts", href: "/dashboard/charts" },
 ];
 
 export default function Navbar() {
@@ -26,16 +27,17 @@ export default function Navbar() {
   const searchParams = useSearchParams();
 
   const isCurrent = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(href + "/");
+    return pathname === href;
   };
 
   return (
-    <nav className="w-full border-b bg-background not-dark:[&_*]:text-blue-950 ">
+    <nav className="w-full border-b bg-background not-dark:**:text-blue-950">
       <div className="mx-auto flex h-16 max-w-5xl gap-8 px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.png" alt="NEOs logo" width={36} height={36} />
-          <span className="font-semibold text-lg md:text-xl">NEOs Monitor</span>
+          <span className="font-semibold text-lg md:text-xl">
+            NEOs Dashboard
+          </span>
         </Link>
 
         <div className="hidden sm:flex items-center justify-start gap-6">
