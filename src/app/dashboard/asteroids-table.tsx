@@ -10,9 +10,18 @@ import type { Asteroid } from "@/types/asteroid";
 
 export default function AsteroidsTable({
   asteroids,
+  page = 1,
+  itemsPerPage = 30,
 }: {
   asteroids: Asteroid[];
+  page: number;
+  itemsPerPage: number;
 }) {
+  const asteroidsOnPage = asteroids.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage,
+  );
+
   return (
     <Table className="w-full">
       <TableHeader>
@@ -31,7 +40,7 @@ export default function AsteroidsTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {asteroids.map((a, index) => (
+        {asteroidsOnPage.map((a, index) => (
           <TableRow
             key={`${a.id}-${a.approach_date}-${index}`}
             className={a.danger_score > 500 ? "bg-red-100" : ""}

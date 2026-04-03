@@ -4,6 +4,7 @@ import AsteroidsTable from "./asteroids-table";
 import { fetchAsteroidsRange } from "@/lib/api";
 import { getValidDates } from "@/lib/date-utils";
 import { redirect } from "next/navigation";
+import PaginationForTable from "@/components/pagination-for-table";
 
 export default async function Dashboard({
   searchParams,
@@ -26,6 +27,30 @@ export default async function Dashboard({
   }
 
   const asteroids = await fetchAsteroidsRange(rawStart, rawEnd);
+  const itemsPerPage = 30;
+  const totalPages = Math.ceil(asteroids.length / itemsPerPage);
 
-  return <AsteroidsTable asteroids={asteroids} />;
+  if (
+    !params.page ||
+    parseInt(params.page) < 1 ||
+    parseInt(params.page) > totalPages
+  ) {
+    const newParams = new URLSearchParams(params as Record<string, string>);
+    newParams.set("page", "1");
+
+    redirect(`/dashboard?${newParams.toString()}`);
+  }
+
+  const pageNum = parseInt(params.page || "1");
+
+  return (
+    <>
+      <AsteroidsTable
+        asteroids={asteroids}
+        page={pageNum}
+        itemsPerPage={itemsPerPage}
+      />
+      <PaginationForTable page={pageNum} totalPages={totalPages} />
+    </>
+  );
 }

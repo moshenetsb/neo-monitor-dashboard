@@ -87,5 +87,8 @@ export async function fetchAsteroidsRange(
     currentStart.setDate(currentStart.getDate() + maxDays);
   }
 
-  return allAsteroids;
+  return allAsteroids.sort(
+    (a, b) =>
+      new Date(a.approach_date).getTime() - new Date(b.approach_date).getTime(),
+  );
 }
