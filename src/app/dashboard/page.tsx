@@ -5,6 +5,10 @@ import { fetchAsteroidsRange } from "@/lib/api";
 import { getValidDates } from "@/lib/date-utils";
 import { redirect } from "next/navigation";
 import PaginationForTable from "@/components/pagination-for-table";
+import DateFilters from "./date-filters";
+import AsteroidFilters from "./asteroid-filters";
+import ClearFilters from "./clear-filters";
+import { filterData } from "@/lib/filter-data";
 
 export default async function Dashboard({
   searchParams,
@@ -28,7 +32,11 @@ export default async function Dashboard({
 
   const asteroids = await fetchAsteroidsRange(rawStart, rawEnd);
   const itemsPerPage = 30;
-  const totalPages = Math.ceil(asteroids.length / itemsPerPage);
+
+  const filteredAsteroids = filterData(asteroids, {
+    get: (key: string) => params[key] || null,
+  });
+  const totalPages = Math.ceil(filteredAsteroids.length / itemsPerPage);
 
   if (
     !params.page ||
@@ -45,8 +53,13 @@ export default async function Dashboard({
 
   return (
     <>
+      <div className="flex items-center gap-2 w-full">
+        <DateFilters />
+        <AsteroidFilters />
+        <ClearFilters />
+      </div>
       <AsteroidsTable
-        asteroids={asteroids}
+        asteroids={filteredAsteroids}
         page={pageNum}
         itemsPerPage={itemsPerPage}
       />

@@ -43,7 +43,7 @@ export default function AsteroidsTable({
         {asteroidsOnPage.map((a, index) => (
           <TableRow
             key={`${a.id}-${a.approach_date}-${index}`}
-            className={a.danger_score > 500 ? "bg-red-100" : ""}
+            className={a.danger_score > 500 ? "bg-red-100 dark:bg-red-950" : ""}
           >
             <TableCell>{a.name}</TableCell>
             <TableCell>{a.approach_date}</TableCell>
@@ -53,9 +53,11 @@ export default function AsteroidsTable({
               )}
             </TableCell>
             <TableCell>
-              {a.estimated_diameter.kilometers.estimated_diameter_max.toFixed(
-                3,
-              )}
+              {(
+                (a.estimated_diameter.kilometers.estimated_diameter_min +
+                  a.estimated_diameter.kilometers.estimated_diameter_max) /
+                2
+              ).toFixed(3)}
             </TableCell>
             <TableCell>
               {Math.round(
