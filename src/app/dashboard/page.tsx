@@ -6,9 +6,9 @@ import { getValidDates } from "@/lib/date-utils";
 import { redirect } from "next/navigation";
 import PaginationForTable from "@/components/pagination-for-table";
 import DateFilters from "./date-filters";
-import AsteroidFilters from "./asteroid-filters";
-import ClearFilters from "./clear-filters";
-import { filterData } from "@/lib/filter-data";
+import AsteroidFiltersAndSorting from "./asteroid-filters-and-sorting";
+import RemoveFiltersAndSorting from "./clear-filters-and-sorting";
+import { filterAndSortData } from "@/lib/filter-and-sort-data";
 
 export default async function Dashboard({
   searchParams,
@@ -30,10 +30,30 @@ export default async function Dashboard({
     redirect(`/dashboard?${newParams.toString()}`);
   }
 
+  if (
+    params.sort_by &&
+    !["approach_date", "velocity", "diameter", "danger_score"].includes(
+      params.sort_by,
+    )
+  ) {
+    const newParams = new URLSearchParams(params as Record<string, string>);
+    newParams.delete("sort_by");
+    newParams.delete("sort_order");
+
+    redirect(`/dashboard?${newParams.toString()}`);
+  }
+
+  if (params.sort_order && !["asc", "desc"].includes(params.sort_order)) {
+    const newParams = new URLSearchParams(params as Record<string, string>);
+    newParams.set("sort_order", "asc");
+
+    redirect(`/dashboard?${newParams.toString()}`);
+  }
+
   const asteroids = await fetchAsteroidsRange(rawStart, rawEnd);
   const itemsPerPage = 30;
 
-  const filteredAsteroids = filterData(asteroids, {
+  const filteredAsteroids = filterAndSortData(asteroids, {
     get: (key: string) => params[key] || null,
   });
   const totalPages = Math.ceil(filteredAsteroids.length / itemsPerPage);
@@ -53,10 +73,12 @@ export default async function Dashboard({
 
   return (
     <>
-      <div className="flex items-center gap-2 w-full">
+      <div className="flex items-center flex-wrap gap-2 w-full">
         <DateFilters />
-        <AsteroidFilters />
-        <ClearFilters />
+        <div className="flex gap-2">
+          <AsteroidFiltersAndSorting />
+          <RemoveFiltersAndSorting />
+        </div>
       </div>
       <AsteroidsTable
         asteroids={filteredAsteroids}

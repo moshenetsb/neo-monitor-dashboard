@@ -12,8 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { redirect, useSearchParams } from "next/navigation";
 import { FunnelPlus } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export default function AsteroidFilters() {
+export default function AsteroidFiltersAndSorting() {
   const params = useSearchParams();
 
   const onClick = (filters: {
@@ -21,6 +28,8 @@ export default function AsteroidFilters() {
     sentry_objects_only: boolean;
     min_velocity: number | "";
     min_diameter: number | "";
+    sort_by: string;
+    sort_order: string;
   }) => {
     const newParams = new URLSearchParams(params);
     if (filters.hazard_only) {
@@ -47,6 +56,9 @@ export default function AsteroidFilters() {
       newParams.delete("min_diameter");
     }
 
+    newParams.set("sort_by", filters.sort_by.toString());
+    newParams.set("sort_order", filters.sort_order.toString());
+
     redirect(`/dashboard?${newParams.toString()}`);
   };
 
@@ -63,17 +75,24 @@ export default function AsteroidFilters() {
     params.get("min_diameter") ? Number(params.get("min_diameter")) : "",
   );
 
+  const [sort_by, setSortBy] = useState<string>(
+    params.get("sort_by") ?? "approach_date",
+  );
+  const [sort_order, setSortOrder] = useState<string>(
+    params.get("sort_order") ?? "asc",
+  );
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline">
           <FunnelPlus />
-          <span className="max-sm:hidden">Change filters</span>
+          <span className="max-md:hidden">Change filters and sorting</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-4">
+      <PopoverContent className="w-80 p-4">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="min_velocity">Min velocity (km/h)</Label>
             <Input
               id="min_velocity"
@@ -88,7 +107,7 @@ export default function AsteroidFilters() {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="min_diameter">Min diameter (m)</Label>
             <Input
               id="min_diameter"
@@ -125,6 +144,30 @@ export default function AsteroidFilters() {
             <Label htmlFor="sentry_objects_only">Sentry objects only</Label>
           </div>
 
+          <div className="flex gap-2 items-center">
+            <Select value={sort_by} onValueChange={setSortBy}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="approach_date">Approach Date</SelectItem>
+                <SelectItem value="diameter">Estimated Diameter</SelectItem>
+                <SelectItem value="velocity">Velocity</SelectItem>
+                <SelectItem value="danger_score">Danger Score</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sort_order} onValueChange={setSortOrder}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Order" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="asc">Ascending</SelectItem>
+                <SelectItem value="desc">Descending</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button
             onClick={() =>
               onClick({
@@ -132,6 +175,8 @@ export default function AsteroidFilters() {
                 min_velocity: min_velocity,
                 min_diameter: min_diameter,
                 sentry_objects_only: sentry_objects_only,
+                sort_by: sort_by,
+                sort_order: sort_order,
               })
             }
           >
