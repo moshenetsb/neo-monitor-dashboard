@@ -13,6 +13,21 @@ if (API_KEY === "") {
   throw new Error("API_KEY was not set in enviroment variables!");
 }
 
+function computeDangerScore(a: Asteroid): number {
+  const diameter = a.estimated_diameter.kilometers.estimated_diameter_max || 0;
+  const velocity =
+    parseFloat(
+      a.close_approach_data[0].relative_velocity.kilometers_per_hour,
+    ) || 0;
+  const missDistance =
+    parseFloat(a.close_approach_data[0].miss_distance.kilometers) || 1;
+  return (
+    ((diameter * velocity) / missDistance) *
+    a.absolute_magnitude_h *
+    (a.is_potentially_hazardous_asteroid ? 100000 : 1000)
+  );
+}
+
 export async function fetchAsteroidsRange(
   startDate: string,
   endDate: string,
@@ -23,7 +38,6 @@ export async function fetchAsteroidsRange(
   const end = new Date(endDate);
   const currentStart = new Date(start);
   const allAsteroids: Asteroid[] = [];
-
   while (currentStart <= end) {
     const currentEnd = new Date(
       Math.min(
@@ -57,7 +71,15 @@ export async function fetchAsteroidsRange(
 
     const flattened = Object.entries(data.near_earth_objects).flatMap(
       ([date, asteroids]) =>
-        (asteroids as Asteroid[]).map((a) => ({ ...a, approach_date: date })),
+        (asteroids as Asteroid[]).map((a) => ({
+          ...a,
+          name:
+            a.name.startsWith("(") && a.name.endsWith(")")
+              ? a.name.slice(1, -1)
+              : a.name,
+          approach_date: date,
+          danger_score: computeDangerScore(a),
+        })),
     ) as Asteroid[];
 
     allAsteroids.push(...flattened);

@@ -1,6 +1,6 @@
 "use server";
 
-import AsteroidsList from "./asteroids-list";
+import AsteroidsTable from "./asteroids-table";
 import { fetchAsteroidsRange } from "@/lib/api";
 import { getValidDates } from "@/lib/date-utils";
 import { redirect } from "next/navigation";
@@ -27,5 +27,5 @@ export default async function Dashboard({
 
   const asteroids = await fetchAsteroidsRange(rawStart, rawEnd);
 
-  return <AsteroidsList asteroids={asteroids} />;
+  return <AsteroidsTable asteroids={asteroids} />;
 }
