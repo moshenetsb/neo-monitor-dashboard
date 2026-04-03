@@ -5,7 +5,7 @@ import { fetchAsteroidsRange } from "@/lib/api";
 import { getValidDates } from "@/lib/date-utils";
 import { redirect } from "next/navigation";
 import PaginationForTable from "@/components/pagination-for-table";
-import DateFilters from "./date-filters";
+import DateFilters from "../date-filters";
 import AsteroidFiltersAndSorting from "./asteroid-filters-and-sorting";
 import RemoveFiltersAndSorting from "./clear-filters-and-sorting";
 import { filterAndSortData } from "@/lib/filter-and-sort-data";
@@ -74,7 +74,7 @@ export default async function Dashboard({
   return (
     <>
       <div className="flex items-center flex-wrap gap-2 w-full">
-        <DateFilters />
+        <DateFilters path="/dashboard" />
         <div className="flex gap-2">
           <AsteroidFiltersAndSorting />
           <RemoveFiltersAndSorting />

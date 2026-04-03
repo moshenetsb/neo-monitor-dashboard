@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { DateRangePicker } from "@/components/date-range-picker";
 import { toast } from "sonner";
 
-export default function DateFilters() {
+export default function DateFilters({ path = "/dashboard" }: { path: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,7 +27,7 @@ export default function DateFilters() {
 
         params.set("page", "1");
 
-        router.push(`/dashboard?${params.toString()}`);
+        router.push(`${path}?${params.toString()}`);
 
         toast.success("Date range updated");
       }}

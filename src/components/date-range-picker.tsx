@@ -26,7 +26,7 @@ export function DateRangePicker({
         <Button
           variant="outline"
           className={cn(
-            "flex w-70 justify-start text-left font-normal max-sm:flex-1",
+            "flex w-70 justify-start text-left font-normal max-sm:w-full max-w-sm",
             !from && "text-muted-foreground",
           )}
         >
