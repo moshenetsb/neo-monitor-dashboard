@@ -40,39 +40,49 @@ export default function AsteroidsTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {asteroidsOnPage.map((a, index) => (
-          <TableRow
-            key={`${a.id}-${a.approach_date}-${index}`}
-            className={a.danger_score > 500 ? "bg-red-100 dark:bg-red-950" : ""}
-          >
-            <TableCell>{a.name}</TableCell>
-            <TableCell>{a.approach_date}</TableCell>
-            <TableCell>
-              {Math.round(
-                parseFloat(a.close_approach_data[0].miss_distance.kilometers),
-              )}
+        {asteroidsOnPage.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={7} className="text-center py-4">
+              No asteroids found for the selected date range and filters.
             </TableCell>
-            <TableCell>
-              {(
-                (a.estimated_diameter.kilometers.estimated_diameter_min +
-                  a.estimated_diameter.kilometers.estimated_diameter_max) /
-                2
-              ).toFixed(3)}
-            </TableCell>
-            <TableCell>
-              {Math.round(
-                parseFloat(
-                  a.close_approach_data[0].relative_velocity
-                    .kilometers_per_hour,
-                ),
-              )}
-            </TableCell>
-            <TableCell>
-              {a.is_potentially_hazardous_asteroid ? "Yes" : "No"}
-            </TableCell>
-            <TableCell>{a.danger_score.toFixed(3)}</TableCell>
           </TableRow>
-        ))}
+        ) : (
+          asteroidsOnPage.map((a, index) => (
+            <TableRow
+              key={`${a.id}-${a.approach_date}-${index}`}
+              className={
+                a.danger_score > 500 ? "bg-red-100 dark:bg-red-950" : ""
+              }
+            >
+              <TableCell>{a.name}</TableCell>
+              <TableCell>{a.approach_date}</TableCell>
+              <TableCell>
+                {Math.round(
+                  parseFloat(a.close_approach_data[0].miss_distance.kilometers),
+                )}
+              </TableCell>
+              <TableCell>
+                {(
+                  (a.estimated_diameter.kilometers.estimated_diameter_min +
+                    a.estimated_diameter.kilometers.estimated_diameter_max) /
+                  2
+                ).toFixed(3)}
+              </TableCell>
+              <TableCell>
+                {Math.round(
+                  parseFloat(
+                    a.close_approach_data[0].relative_velocity
+                      .kilometers_per_hour,
+                  ),
+                )}
+              </TableCell>
+              <TableCell>
+                {a.is_potentially_hazardous_asteroid ? "Yes" : "No"}
+              </TableCell>
+              <TableCell>{a.danger_score.toFixed(3)}</TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );

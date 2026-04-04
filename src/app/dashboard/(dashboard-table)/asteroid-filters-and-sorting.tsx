@@ -110,7 +110,7 @@ export default function AsteroidFiltersAndSorting() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="min_diameter">Min diameter (m)</Label>
+            <Label htmlFor="min_diameter">Min diameter (km)</Label>
             <Input
               id="min_diameter"
               type="number"

@@ -58,18 +58,18 @@ export default async function Dashboard({
   });
   const totalPages = Math.ceil(filteredAsteroids.length / itemsPerPage);
 
-  if (
-    !params.page ||
-    parseInt(params.page) < 1 ||
-    parseInt(params.page) > totalPages
-  ) {
-    const newParams = new URLSearchParams(params as Record<string, string>);
-    newParams.set("page", "1");
+  const pageNum = parseInt(params.page || "1");
 
+  const validPageNum =
+    filteredAsteroids.length > 0
+      ? Math.min(Math.max(pageNum, 1), totalPages)
+      : 1;
+
+  if (pageNum !== validPageNum && filteredAsteroids.length > 0) {
+    const newParams = new URLSearchParams(params as Record<string, string>);
+    newParams.set("page", validPageNum.toString());
     redirect(`/dashboard?${newParams.toString()}`);
   }
-
-  const pageNum = parseInt(params.page || "1");
 
   return (
     <>
@@ -85,7 +85,9 @@ export default async function Dashboard({
         page={pageNum}
         itemsPerPage={itemsPerPage}
       />
-      <PaginationForTable page={pageNum} totalPages={totalPages} />
+      {filteredAsteroids.length > 0 ? (
+        <PaginationForTable page={pageNum} totalPages={totalPages} />
+      ) : null}
     </>
   );
 }
