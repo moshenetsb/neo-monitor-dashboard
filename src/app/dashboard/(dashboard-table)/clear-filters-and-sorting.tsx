@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FunnelX } from "lucide-react";
+import { toast } from "sonner";
 
 export default function RemoveFiltersAndSorting() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function RemoveFiltersAndSorting() {
         newParams.delete("sort_by");
         newParams.delete("sort_order");
 
+        toast.success("All filters removed. Displaying full dataset.");
         router.push(`/dashboard?${newParams.toString()}`);
       }}
     >

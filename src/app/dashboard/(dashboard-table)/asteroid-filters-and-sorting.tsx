@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 export default function AsteroidFiltersAndSorting() {
   const params = useSearchParams();
@@ -182,9 +183,10 @@ export default function AsteroidFiltersAndSorting() {
               });
 
               setOpen(false);
+              toast.success("Filters and sorting applied");
             }}
           >
-            Apply parameters
+            Apply filters and sorting
           </Button>
         </div>
       </PopoverContent>

@@ -77,7 +77,7 @@ export default function SizeDistributionChart({
             color: isDark ? "#E5E7EB" : "#111",
           }}
           itemStyle={{
-            color: isDark ? "#60A5FA" : "#111",
+            color: "#3B82F6",
           }}
         />
         <Legend
