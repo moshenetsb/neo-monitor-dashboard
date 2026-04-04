@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export function DateRangePicker({
   from,
@@ -20,8 +21,10 @@ export function DateRangePicker({
   to?: Date;
   onChange: (range: { from?: Date; to?: Date }) => void;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -49,7 +52,10 @@ export function DateRangePicker({
         <Calendar
           mode="range"
           selected={{ from, to }}
-          onSelect={(range) => onChange(range || {})}
+          onSelect={(range) => {
+            onChange(range || {});
+            setIsOpen(false);
+          }}
           numberOfMonths={1}
         />
       </PopoverContent>

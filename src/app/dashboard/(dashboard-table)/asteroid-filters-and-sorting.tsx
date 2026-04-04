@@ -23,6 +23,7 @@ import {
 export default function AsteroidFiltersAndSorting() {
   const params = useSearchParams();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   const onClick = (filters: {
     hazard_only: boolean;
@@ -84,7 +85,7 @@ export default function AsteroidFiltersAndSorting() {
   );
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline">
           <FunnelPlus />
@@ -170,7 +171,7 @@ export default function AsteroidFiltersAndSorting() {
           </div>
 
           <Button
-            onClick={() =>
+            onClick={() => {
               onClick({
                 hazard_only: hazard_only,
                 min_velocity: min_velocity,
@@ -178,8 +179,10 @@ export default function AsteroidFiltersAndSorting() {
                 sentry_objects_only: sentry_objects_only,
                 sort_by: sort_by,
                 sort_order: sort_order,
-              })
-            }
+              });
+
+              setOpen(false);
+            }}
           >
             Apply parameters
           </Button>
