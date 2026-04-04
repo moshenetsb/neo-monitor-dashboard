@@ -2,11 +2,10 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
-  const searchParams = useSearchParams();
+  const router = useRouter();
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-20 px-4 text-center">
@@ -15,10 +14,7 @@ export default function NotFound() {
         <AlertDescription className="text-lg text-muted-foreground text-center">
           Sorry, the page you are looking for does not exist.
         </AlertDescription>
-        <Button
-          onClick={() => redirect(`/?${searchParams.toString()}`)}
-          className="text-lg px-4 py-6"
-        >
+        <Button onClick={() => router.push("/")} className="text-lg px-4 py-6">
           Go back home
         </Button>
       </Alert>

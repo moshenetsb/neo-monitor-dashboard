@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FunnelPlus } from "lucide-react";
 import {
   Select,
@@ -22,6 +22,7 @@ import {
 
 export default function AsteroidFiltersAndSorting() {
   const params = useSearchParams();
+  const router = useRouter();
 
   const onClick = (filters: {
     hazard_only: boolean;
@@ -59,7 +60,7 @@ export default function AsteroidFiltersAndSorting() {
     newParams.set("sort_by", filters.sort_by.toString());
     newParams.set("sort_order", filters.sort_order.toString());
 
-    redirect(`/dashboard?${newParams.toString()}`);
+    router.push(`/dashboard?${newParams.toString()}`);
   };
 
   const [hazard_only, setHazardOnly] = useState(

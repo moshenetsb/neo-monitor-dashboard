@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/navbar";
@@ -51,8 +52,10 @@ export default function RootLayout({
     >
       <body className="flex flex-col antialiased m-0 min-h-screen">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navbar />
-          {children}
+          <Suspense>
+            <Navbar />
+          </Suspense>
+          <Suspense>{children}</Suspense>
           <Toaster />
         </ThemeProvider>
       </body>

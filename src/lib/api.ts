@@ -1,16 +1,14 @@
 import type { Asteroid } from "@/types/asteroid";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
-export const API_KEY = process.env.NASA_API_KEY ?? "";
+const API_BASE_URL = process.env.API_BASE_URL ?? "";
+const NASA_API_KEY = process.env.NASA_API_KEY ?? "";
 
-if (API_URL === "") {
-  throw new Error(
-    "NEXT_PUBLIC_API_BASE_URL was not set in enviroment variables!",
-  );
+if (API_BASE_URL === "") {
+  throw new Error("API_BASE_URL was not set in enviroment variables!");
 }
 
-if (API_KEY === "") {
-  throw new Error("API_KEY was not set in enviroment variables!");
+if (NASA_API_KEY === "") {
+  throw new Error("NASA_API_KEY was not set in enviroment variables!");
 }
 
 function computeDangerScore(a: Asteroid): number {
@@ -49,7 +47,7 @@ export async function fetchAsteroidsRange(
     const endStr = currentEnd.toISOString().split("T")[0];
 
     const response = await fetch(
-      `${API_URL}/feed?start_date=${startStr}&end_date=${endStr}&api_key=${API_KEY}`,
+      `${API_BASE_URL}/feed?start_date=${startStr}&end_date=${endStr}&api_key=${NASA_API_KEY}`,
       {
         next: { revalidate: 900 },
       },

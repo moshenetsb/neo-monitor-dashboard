@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { fetchAsteroidsRange } from "@/lib/api";
 import { getValidDates } from "@/lib/date-utils";
 import { redirect } from "next/navigation";
@@ -31,7 +32,9 @@ export default async function ChartsPage({
 
   return (
     <>
-      <DateFilters path="/dashboard/charts" />
+      <Suspense>
+        <DateFilters path="/dashboard/charts" />
+      </Suspense>
       <div className="flex flex-wrap gap-4 w-full">
         <BusiestDaysChart asteroids={asteroids} />
         <DangerChart asteroids={asteroids} />
